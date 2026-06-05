@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ECOM-BACKEND — Registration & Security Docs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0f1118;
+      --surface: #181b28;
+      --surface2: #1e2235;
+      --border: #2a2e42;
+      --text: #e2e4f0;
+      --text-muted: #8b8fa8;
+      --accent: #6c5ce7;
+      --accent-glow: rgba(108, 92, 231, 0.15);
+      --green: #00cec9;
+      --green-bg: rgba(0, 206, 201, 0.1);
+      --red: #ff6b6b;
+      --red-bg: rgba(255, 107, 107, 0.1);
+      --yellow: #fdcb6e;
+      --yellow-bg: rgba(253, 203, 110, 0.1);
+      --blue: #74b9ff;
+      --blue-bg: rgba(116, 185, 255, 0.1);
+      --radius: 12px;
+      --radius-sm: 8px;
+    }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      padding: 0;
+    }
+    .container { max-width: 920px; margin: 0 auto; padding: 0 24px; }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 64px 0 48px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 56px;
+    }
+    .hero h1 {
+      font-size: 2.75rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+      background: linear-gradient(135deg, var(--accent), var(--green));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero p {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      margin-top: 12px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .hero .badge {
+      display: inline-block;
+      margin-top: 20px;
+      background: var(--accent-glow);
+      border: 1px solid rgba(108,92,231,0.25);
+      color: var(--accent);
+      padding: 6px 18px;
+      border-radius: 100px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    /* ── TOC ── */
+    .toc {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px 32px;
+      margin-bottom: 56px;
+    }
+    .toc h2 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 12px; }
+    .toc ol { list-style: none; counter-reset: toc; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+    .toc li { counter-increment: toc; }
+    .toc li::before { content: counter(toc) "."; color: var(--accent); font-weight: 600; margin-right: 8px; font-size: 0.85rem; }
+    .toc a { color: var(--text); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+    .toc a:hover { color: var(--accent); }
+
+    /* ── Sections ── */
+    section { margin-bottom: 56px; }
+    section h2 {
+      font-size: 1.55rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    section h2 .num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      background: var(--accent-glow);
+      color: var(--accent);
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+    .section-desc {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 24px;
+      padding-left: 42px;
+    }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 32px;
+      margin-bottom: 20px;
+    }
+    .card h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card p, .card li { color: #c8cbe0; font-size: 0.92rem; line-height: 1.7; }
+    .card ul, .card ol { padding-left: 20px; }
+    .card li { margin-bottom: 4px; }
+    .card strong { color: var(--text); }
+
+    /* ── Steps ── */
+    .steps { display: flex; flex-direction: column; gap: 0; }
+    .step {
+      display: flex;
+      gap: 16px;
+      padding: 20px 0;
+      border-left: 2px solid var(--border);
+      padding-left: 24px;
+      margin-left: 12px;
+      position: relative;
+    }
+    .step:last-child { border-left-color: transparent; }
+    .step .dot {
+      position: absolute;
+      left: -9px;
+      top: 22px;
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 3px solid var(--bg);
+      flex-shrink: 0;
+    }
+    .step .dot-green { background: var(--green); }
+    .step .dot-red { background: var(--red); }
+    .step .dot-yellow { background: var(--yellow); }
+    .step-content { flex: 1; }
+    .step-content h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; }
+    .step-content p { color: var(--text-muted); font-size: 0.88rem; }
+
+    /* ── Code blocks ── */
+    pre {
+      background: #0a0d17;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 18px 20px;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      line-height: 1.65;
+      color: #d4d6e6;
+      margin: 14px 0 0;
+      position: relative;
+    }
+    pre .kw { color: #c792ea; }
+    pre .fn { color: #82aaff; }
+    pre .str { color: #c3e88d; }
+    pre .cm { color: #546e7a; font-style: italic; }
+    pre .num { color: #f78c6c; }
+    pre .var { color: #eeffff; }
+    pre .prop { color: #b2ccd6; }
+    pre .op { color: #89ddff; }
+    pre .built { color: #ffcb6b; }
+    pre .const { color: #f07178; }
+
+    .code-label {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      background: var(--surface2);
+      padding: 2px 10px;
+      border-radius: 4px;
+      margin-bottom: 6px;
+      border: 1px solid var(--border);
+    }
+
+    /* ── Tags / labels ── */
+    .tag {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-right: 4px;
+    }
+    .tag-green { background: var(--green-bg); color: var(--green); }
+    .tag-red { background: var(--red-bg); color: var(--red); }
+    .tag-yellow { background: var(--yellow-bg); color: var(--yellow); }
+    .tag-blue { background: var(--blue-bg); color: var(--blue); }
+
+    /* ── Alert boxes ── */
+    .alert {
+      padding: 16px 20px;
+      border-radius: var(--radius-sm);
+      border-left: 4px solid;
+      margin: 16px 0;
+      font-size: 0.9rem;
+    }
+    .alert-danger { background: var(--red-bg); border-color: var(--red); }
+    .alert-warning { background: var(--yellow-bg); border-color: var(--yellow); }
+    .alert-success { background: var(--green-bg); border-color: var(--green); }
+    .alert-info { background: var(--blue-bg); border-color: var(--blue); }
+
+    /* ── Attack cards ── */
+    .attack-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+    .attack-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 18px 20px;
+    }
+    .attack-card h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 6px; }
+    .attack-card p { font-size: 0.85rem; color: var(--text-muted); }
+
+    /* ── File tree ── */
+    .file-tree {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      line-height: 2;
+      background: #0a0d17;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 18px 24px;
+      margin: 14px 0;
+    }
+    .file-tree .folder { color: var(--yellow); }
+    .file-tree .file { color: var(--text-muted); }
+    .file-tree .hl { color: var(--green); font-weight: 500; }
+
+    /* ── Responsive ── */
+    @media (max-width: 700px) {
+      .hero h1 { font-size: 1.8rem; }
+      .toc ol { grid-template-columns: 1fr; }
+      .attack-grid { grid-template-columns: 1fr; }
+      .card { padding: 20px; }
+    }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 32px 0 48px;
+      border-top: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="container">
+    <h1>ECOM-BACKEND · Docs</h1>
+    <p>Registration flow, bcrypt salting, security concepts, <br>Nodemailer integration &amp; rate limiting — explained with code.</p>
+    <span class="badge">Node.js · Express · MongoDB · bcrypt · Nodemailer</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- TOC -->
+  <nav class="toc">
+    <h2>Contents</h2>
+    <ol>
+      <li><a href="#register-flow">Registration Flow (Step-by-Step)</a></li>
+      <li><a href="#model">User Model (Mongoose Schema)</a></li>
+      <li><a href="#bcrypt">bcrypt — Salting &amp; Why It Matters</a></li>
+      <li><a href="#no-bcrypt">What Happens Without bcrypt</a></li>
+      <li><a href="#nodemailer">Nodemailer Integration (gmail.js)</a></li>
+      <li><a href="#ratelimit">Rate Limiting</a></li>
+      <li><a href="#file-tree">Project File Tree</a></li>
+    </ol>
+  </nav>
+
+  <!-- ──── 1 ──── -->
+  <section id="register-flow">
+    <h2><span class="num">1</span> Registration Flow</h2>
+    <p class="section-desc">What happens when a user hits <code style="background:var(--surface2);padding:1px 6px;border-radius:4px;">POST /register</code></p>
+
+    <div class="card">
+      <div class="steps">
+        <div class="step">
+          <div class="dot"></div>
+          <div class="step-content">
+            <h4>1. Parse request body</h4>
+            <p>Extract <strong>username</strong>, <strong>password</strong>, <strong>email</strong>, <strong>role</strong> from the incoming JSON payload.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="dot dot-yellow"></div>
+          <div class="step-content">
+            <h4>2. Validate required fields</h4>
+            <p>If any field is missing, immediately return <code style="background:var(--surface2);padding:1px 6px;border-radius:4px;">"msg": "missing fields"</code>.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="dot dot-yellow"></div>
+          <div class="step-content">
+            <h4>3. Check for duplicate user</h4>
+            <p>Query MongoDB for an existing user with the same <strong>username</strong>. If found, return <code>"user already exist"</code>.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="dot dot-green"></div>
+          <div class="step-content">
+            <h4>4. Hash the password (bcrypt)</h4>
+            <p><code>bcrypt.hash(password, 10)</code> — 10 salt rounds. This is where security happens.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="dot dot-green"></div>
+          <div class="step-content">
+            <h4>5. Save user to database</h4>
+            <p>Store <strong>username</strong>, <strong>hashed password</strong>, <strong>email</strong>, <strong>role</strong> in MongoDB. The raw password is never stored.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="dot dot-green"></div>
+          <div class="step-content">
+            <h4>6. Send welcome email</h4>
+            <p>Call <code>mail(email, username)</code> — Nodemailer sends a confirmation email asynchronously.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="dot"></div>
+          <div class="step-content">
+            <h4>7. Respond to client</h4>
+            <p>Return <code style="background:var(--surface2);padding:1px 6px;border-radius:4px;">{"msg": "registration succesfull"}</code></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h3 style="font-size:1.05rem;font-weight:600;margin:24px 0 12px;">The actual route code</h3>
+    <pre>
+<span class="cm">// app.js — line 73</span>
+<span class="kw">app.post</span>(<span class="str">'/register'</span>, <span class="kw">async</span> (req, res) => {
+  <span class="kw">try</span> {
+    <span class="kw">const</span> { <span class="var">username</span>, <span class="var">password</span>, <span class="var">email</span>, <span class="var">role</span> } = req.body;
+
+    <span class="cm">// 1) Check fields</span>
+    <span class="kw">if</span> (!username || !password || !email || !role)
+      <span class="kw">return</span> res.json({ <span class="prop">msg</span>: <span class="str">"missing fields"</span> });
+
+    <span class="cm">// 2) Check duplicate</span>
+    <span class="kw">let</span> checkuser = <span class="kw">await</span> users.findOne({ username });
+    <span class="kw">if</span> (checkuser) <span class="kw">return</span> res.json({ <span class="prop">msg</span>: <span class="str">"user already exist"</span> });
+
+    <span class="cm">// 3) Hash password (10 salt rounds)</span>
+    <span class="kw">let</span> hashedpassword = <span class="kw">await</span> bcrypt.hash(password, <span class="num">10</span>);
+
+    <span class="cm">// 4) Store user</span>
+    <span class="kw">await</span> users.create({ username, <span class="prop">password</span>: hashedpassword, email, role });
+
+    <span class="cm">// 5) Send email</span>
+    mail(email, username);
+
+    res.json({ <span class="prop">msg</span>: <span class="str">"registration succesfull"</span> });
+
+  } <span class="kw">catch</span> (error) {
+    res.json({ <span class="prop">msg</span>: error.message });
+  }
+});</pre>
+  </section>
+
+  <!-- ──── 2 ──── -->
+  <section id="model">
+    <h2><span class="num">2</span> User Model (Schema)</h2>
+    <p class="section-desc">Mongoose schema that defines the shape of a user document in MongoDB</p>
+    <div class="card">
+      <p style="margin-bottom:12px;">Located at <code style="background:var(--surface2);padding:2px 8px;border-radius:4px;">models/usermodel.js</code></p>
+      <pre>
+<span class="kw">const</span> mongoose = <span class="built">require</span>(<span class="str">'mongoose'</span>);
+
+<span class="kw">let</span> userschema = <span class="kw">new</span> mongoose.Schema({
+  <span class="prop">username</span>:  { <span class="prop">type</span>: String, <span class="prop">required</span>: <span class="kw">true</span>, <span class="prop">unique</span>: <span class="kw">true</span> },
+  <span class="prop">password</span>:  { <span class="prop">type</span>: String, <span class="prop">required</span>: <span class="kw">true</span> },
+  <span class="prop">email</span>:     { <span class="prop">type</span>: String, <span class="prop">required</span>: <span class="kw">true</span>, <span class="prop">unique</span>: <span class="kw">true</span> },
+  <span class="prop">role</span>:      { <span class="prop">type</span>: String, <span class="prop">enum</span>: [<span class="str">"seller"</span>, <span class="str">"buyer"</span>], <span class="prop">required</span>: <span class="kw">true</span> }
+}, { <span class="prop">timestamps</span>: <span class="kw">true</span> });
+
+<span class="kw">let</span> users = mongoose.model(<span class="str">'users'</span>, userschema);
+<span class="built">module.exports</span> = users;</pre>
+      <div class="alert alert-info" style="margin-top:14px;">
+        <strong>Note:</strong> <code>unique: true</code> on both <strong>username</strong> and <strong>email</strong> prevents duplicate accounts at the database level. <code>enum</code> restricts <strong>role</strong> to only <code>"seller"</code> or <code>"buyer"</code>.
+      </div>
+    </div>
+  </section>
+
+  <!-- ──── 3 ──── -->
+  <section id="bcrypt">
+    <h2><span class="num">3</span> bcrypt — Salting &amp; Why It Matters</h2>
+    <p class="section-desc">What bcrypt does under the hood and why you must use it</p>
+
+    <div class="card">
+      <h3>What is a salt?</h3>
+      <p>A <strong>salt</strong> is a random string appended to the password before hashing. Every user gets a <em>different</em> salt, so even if two users have the same password, their hashes will be completely different.</p>
+    </div>
+
+    <div class="card">
+      <h3>How <code>bcrypt.hash(password, 10)</code> works</h3>
+      <p>The second argument (<strong>10</strong>) is the <strong>salt round</strong> cost factor. bcrypt internally:</p>
+      <ol style="margin-top:10px;">
+        <li>Generates a <strong>cryptographically random salt</strong> (16 bytes → 22 chars in base64)</li>
+        <li>Appends the salt to your password: <code style="background:var(--surface2);padding:2px 6px;border-radius:4px;">salt + password</code></li>
+        <li>Runs the <strong>Blowfish cipher</strong> — <code>2<sup>10</sup> = 1024</code> iterations of key expansion</li>
+        <li>Returns a single string containing: <code style="background:var(--surface2);padding:2px 6px;border-radius:4px;">$2b$10$[salt][hash]</code></li>
+      </ol>
+      <div class="alert alert-success" style="margin-top:14px;">
+        <strong>Why 10 rounds?</strong> High enough to slow down attackers, low enough to not annoy users (~50ms on modern hardware). Each extra round doubles the compute time.
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Why you must salt — the Repercussions</h3>
+      <p>Without bcrypt salting, every security boundary crossed becomes catastrophic:</p>
+      <div class="attack-grid">
+        <div class="attack-card">
+          <h4> Rainbow Tables</h4>
+          <p>Attackers precompute hashes for billions of common passwords. Unsalted <code>MD5("password123")</code> is instantly reverseable. Salts make precomputation <strong>useless</strong> — the attacker would need a table for every possible salt.</p>
+        </div>
+        <div class="attack-card">
+          <h4> Identical Password Leak</h4>
+          <p>Without salt, users "alice" and "bob" with the same password produce the <strong>same hash</strong>. An attacker who cracks one knows the other's password too.</p>
+        </div>
+        <div class="attack-card">
+          <h4> GPU Brute Force</h4>
+          <p>Modern GPUs compute billions of MD5/SHA-256 hashes per second. bcrypt's adaptive cost (Blowfish rounds) makes each guess <strong>~50,000× slower</strong> than SHA-256, buying critical time.</p>
+        </div>
+        <div class="attack-card">
+          <h4> Database Breach</h4>
+          <p>If your DB is leaked (SQL injection, exposed backup, misconfigured MongoDB), unsalted hashes are trivial to crack. With bcrypt + salt, cracking even one password becomes <strong>prohibitively expensive</strong>.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>What happens at login?</h3>
+      <p><code>bcrypt.compare(password, userdetails.password)</code> extracts the salt from the stored hash, re-applies it to the incoming password, and compares.</p>
+      <pre>
+<span class="cm">// app.js — login route</span>
+<span class="kw">let</span> checkpassword = bcrypt.compare(password, userdetails.password);
+<span class="kw">if</span> (!checkpassword) <span class="kw">return</span> res.json({ <span class="prop">msg</span>: <span class="str">"invalid credentials"</span> });</pre>
+      <div class="alert alert-warning" style="margin-top:10px;">
+        <strong>Note:</strong> There's a bug here — <code>bcrypt.compare</code> returns a <strong>Promise</strong>, not a boolean. Needs <code>await</code> in your codebase.
+      </div>
+    </div>
+  </section>
+
+  <!-- ──── 4 ──── -->
+  <section id="no-bcrypt">
+    <h2><span class="num">4</span> What Happens Without bcrypt?</h2>
+    <p class="section-desc">Every single way an attacker can exploit unsalted / unhashed passwords</p>
+
+    <div class="card">
+      <h3> Plain Text Passwords</h3>
+      <p>If you store <code style="background:var(--surface2);padding:2px 6px;border-radius:4px;">{username: "alice", password: "password123"}</code> — the database has the actual password. One breach and <strong>every account is compromised instantly</strong>. Users reuse passwords across sites. You've now leaked their bank email, Netflix, etc.</p>
+      <div class="alert alert-danger" style="margin-top:10px;">
+        This is the #1 security sin. Never, ever store plain text passwords.
+      </div>
+    </div>
+
+    <div class="card">
+      <h3> Unsalted Hash (e.g. plain MD5/SHA)</h3>
+      <div class="attack-grid">
+        <div class="attack-card">
+          <h4>Rainbow Table Attack</h4>
+          <p>Free online rainbow tables (like CrackStation) index <strong>trillions</strong> of precomputed hashes. Query <code>MD5("password123")</code> → instant plaintext.</p>
+        </div>
+        <div class="attack-card">
+          <h4>Dictionary Attack</h4>
+          <p>Take 10,000 most common passwords, hash each one, compare against DB dump. Finds ~40% of passwords in seconds.</p>
+        </div>
+        <div class="attack-card">
+          <h4>Mask Attack</h4>
+          <p>Know the password pattern? E.g. "Summer2024" — hash variations like "Summer2025", "Summer2026" and match against the dump.</p>
+        </div>
+        <div class="attack-card">
+          <h4>Collision / Matching</h4>
+          <p>Two users with password "qwerty" produce <strong>identical hashes</strong> without salt. Crack one, compromise both.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3> Weak Hash + No Salt (What attackers do)</h3>
+      <p>Step-by-step attack on a leaked database with unsalted hashes:</p>
+      <ol style="margin-top:10px;">
+        <li><strong>Extract</strong> the password hash column from the DB dump</li>
+        <li><strong>Identify</strong> hash type (MD5 starts with <code>$1$</code>, SHA-256 is 64 hex chars, etc.)</li>
+        <li><strong>Run hashcat</strong> or <strong>John the Ripper</strong> on a GPU rig — MD5 runs at ~100B hashes/sec on a single RTX 4090</li>
+        <li><strong>"password123"</strong> is cracked in <strong>0.000001 seconds</strong></li>
+        <li><strong>Credential stuffing</strong> — try those email:password combos on Gmail, GitHub, banking sites</li>
+      </ol>
+      <div class="alert alert-danger" style="margin-top:12px;">
+        <strong>Bottom line:</strong> Without bcrypt, a database breach is a <em>catastrophic</em> event. With bcrypt + salt rounds, it's a <em>minor</em> incident.
+      </div>
+    </div>
+  </section>
+
+  <!-- ──── 5 ──── -->
+  <section id="nodemailer">
+    <h2><span class="num">5</span> Nodemailer Integration</h2>
+    <p class="section-desc">Sending welcome emails via Gmail — the full pipeline</p>
+
+    <div class="card">
+      <h3>The mailer utility — <code>utills/gmail.js</code></h3>
+      <p>This file exports an <code>async</code> function that takes <strong>email</strong> and <strong>username</strong>, creates a Gmail transporter, and sends a confirmation message.</p>
+      <pre>
+<span class="kw">const</span> nodemailer = <span class="built">require</span>(<span class="str">'nodemailer'</span>);
+
+<span class="kw">async function</span> <span class="fn">mail</span>(<span class="var">email</span>, <span class="var">username</span>) {
+  <span class="kw">const</span> transporter = <span class="kw">await</span> nodemailer.createTransport({
+    <span class="prop">service</span>: <span class="str">"gmail"</span>,
+    <span class="prop">auth</span>: {
+      <span class="prop">user</span>: process.env.GMAILUSER,
+      <span class="prop">pass</span>: process.env.GMAILPASS
+    }
+  });
+
+  <span class="kw">const</span> message = {
+    <span class="prop">from</span>: process.env.GMAILUSER,
+    <span class="prop">to</span>: email,
+    <span class="prop">subject</span>: <span class="str">"Account creation"</span>,
+    <span class="prop">text</span>: <span class="str">`Hi, ${username} your account is created successfully`</span>,
+    <span class="prop">html</span>: <span class="str">"registration</b>"</span>
+  };
+
+  <span class="kw">await</span> transporter.sendMail(message);
+  <span class="built">console</span>.log(<span class="str">"email sent"</span>);
+}
+
+<span class="built">module.exports</span> = mail;</pre>
+    </div>
+
+    <div class="card">
+      <h3>How to import &amp; use it</h3>
+      <p>In any route file, require the function and call it with the recipient's email and username:</p>
+      <pre>
+<span class="cm">// 1. Import (at the top of app.js)</span>
+<span class="kw">let</span> mail = <span class="built">require</span>(<span class="str">'./utills/gmail'</span>);
+
+<span class="cm">// 2. Call it after successful registration</span>
+<span class="fn">mail</span>(email, username);</pre>
+
+      <div class="alert alert-success" style="margin-top:14px;">
+        <strong>Important:</strong> The function signature is <code>mail(email, username)</code>. <strong>Email comes first, username second.</strong> The email is the destination address; the username is used in the message body.
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Setup instructions (Gmail App Password)</h3>
+      <p>For Gmail to allow Nodemailer, you must use an <strong>App Password</strong> (not your regular Gmail password):</p>
+      <ol style="margin-top:10px;">
+        <li>Go to <a href="https://myaccount.google.com/security" style="color:var(--accent);" target="_blank">Google Account → Security</a></li>
+        <li>Enable <strong>2-Step Verification</strong> (required for App Passwords)</li>
+        <li>Search for <strong>"App passwords"</strong> in Google Account settings</li>
+        <li>Select <strong>Mail</strong> as the app and <strong>Other</strong> as the device</li>
+        <li>Copy the 16-character password generated</li>
+        <li>Add to your <code style="background:var(--surface2);padding:2px 6px;border-radius:4px;">.env</code> file:</li>
+      </ol>
+      <pre>
+<span class="cm"># .env</span>
+GMAILUSER=<span class="str">'your.email@gmail.com'</span>
+GMAILPASS=<span class="str">'xxxx xxxx xxxx xxxx'</span></pre>
+    </div>
+
+    <div class="card">
+      <h3>How it's wired into the registration route</h3>
+      <p>In <code>app.js:88</code>, after the user is saved to the database, the mail function is called <strong>fire-and-forget</strong> (no <code>await</code>):</p>
+      <pre>
+<span class="cm">// User saved successfully, now notify them</span>
+mail(email, username);
+
+<span class="cm">// Response sent back to client independently</span>
+res.json({ <span class="prop">msg</span>: <span class="str">"registration succesfull"</span> });</pre>
+      <p style="margin-top:8px;color:var(--text-muted);">This means the response is immediate — the email sends in the background.</p>
+    </div>
+  </section>
+
+  <!-- ──── 6 ──── -->
+  <section id="ratelimit">
+    <h2><span class="num">6</span> Rate Limiting</h2>
+    <p class="section-desc">Protecting your API from brute-force and abuse using <code>express-rate-limit</code></p>
+
+    <div class="card">
+      <h3>The middleware — <code>middlewares/ratelimit.js</code></h3>
+      <pre>
+<span class="kw">const</span> { rateLimit } = <span class="built">require</span>(<span class="str">'express-rate-limit'</span>);
+
+<span class="kw">const</span> limiter = rateLimit({
+  <span class="prop">windowMs</span>: <span class="num">15 * 60 * 1000</span>,  <span class="cm">// 15 minutes</span>
+  <span class="prop">limit</span>: <span class="num">3</span>,                  <span class="cm">// Max 3 requests per window</span>
+  <span class="prop">standardHeaders</span>: <span class="str">'draft-8'</span>,
+  <span class="prop">legacyHeaders</span>: <span class="kw">false</span>,
+  <span class="prop">ipv6Subnet</span>: <span class="num">56</span>
+});
+
+<span class="built">module.exports</span> = limiter;</pre>
+
+      <div class="alert alert-warning" style="margin-top:14px;">
+        <strong>Current limit is 3 requests per 15 minutes</strong> — this is extremely strict. In production you'd typically set <code>limit: 100</code> or higher for general routes, and <code>limit: 5-10</code> specifically on <code>/register</code> and <code>/login</code>.
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>How it's applied globally</h3>
+      <p>In <code>app.js:16</code>, the limiter is mounted as <strong>global middleware</strong> — every route is rate-limited:</p>
+      <pre>
+<span class="cm">// app.js</span>
+app.use(limiter);</pre>
+      <p style="margin-top:8px;color:var(--text-muted);">This means <code>POST /register</code>, <code>POST /login</code>, <code>GET /products</code> — all share the same 3-request-per-15-minute limit per IP.</p>
+    </div>
+
+    <div class="card">
+      <h3>Why rate limiting matters for security</h3>
+      <div class="attack-grid">
+        <div class="attack-card">
+          <h4>Brute-force login</h4>
+          <p>Without rate limiting, an attacker can try thousands of passwords against <code>/login</code> in seconds. With rate limiting, they get 3 attempts per 15 minutes — infeasible.</p>
+        </div>
+        <div class="attack-card">
+          <h4>Registration spam</h4>
+          <p>Bots can create thousands of fake accounts. Rate limiting <code>/register</code> caps this to 3 accounts per 15 minutes per IP.</p>
+        </div>
+        <div class="attack-card">
+          <h4>DoS amplification</h4>
+          <p>Attackers can hammer your DB with expensive bcrypt operations. bcrypt is intentionally slow — rate limiting prevents resource exhaustion.</p>
+        </div>
+        <div class="attack-card">
+          <h4>Credential stuffing</h4>
+          <p>Automated tools try breached email:password pairs against your API. 3 tries per 15 minutes makes this economically unviable.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ──── 7 ──── -->
+  <section id="file-tree">
+    <h2><span class="num">7</span> Project File Tree</h2>
+    <p class="section-desc">Complete structure of the ECOM-BACKEND project</p>
+    <div class="card">
+      <div class="file-tree">
+<span class="folder">ECOM-BACKEND/</span>
+├── <span class="hl">app.js</span>                    <span class="cm" style="color:#546e7a;">← Entry point (all routes, middleware registration)</span>
+├── <span class="file">package.json</span>               <span class="cm" style="color:#546e7a;">← Dependencies & scripts</span>
+├── <span class="file">.env</span>                       <span class="cm" style="color:#546e7a;">← Environment variables (PORT, MONGODBURL, GMAIL ...)</span>
+├── <span class="file">.gitignore</span>
+│
+├── <span class="folder">config/</span>
+│   └── <span class="file">db.js</span>                  <span class="cm" style="color:#546e7a;">← MongoDB connection via Mongoose</span>
+│
+├── <span class="folder">models/</span>
+│   ├── <span class="file">usermodel.js</span>           <span class="cm" style="color:#546e7a;">← User schema (username, password, email, role)</span>
+│   └── <span class="file">product.model.js</span>       <span class="cm" style="color:#546e7a;">← (Misnamed — also a User model)</span>
+│
+├── <span class="folder">middlewares/</span>
+│   └── <span class="file">ratelimit.js</span>           <span class="cm" style="color:#546e7a;">← express-rate-limit config</span>
+│
+├── <span class="folder">utills/</span>                     <span class="cm" style="color:#546e7a;">← (typo: "utills" instead of "utils")</span>
+│   └── <span class="file">gmail.js</span>               <span class="cm" style="color:#546e7a;">← Nodemailer transporter & send function</span>
+│
+└── <span class="file">products.js</span>                <span class="cm" style="color:#546e7a;">← Static product seed data</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ──── Summary ──── -->
+  <section>
+    <h2><span class="num" style="background:var(--green-bg);color:var(--green);">S</span> Security Checklist Summary</h2>
+    <p class="section-desc">How this project protects users (and where it can improve)</p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+      <div class="card" style="border-left:4px solid var(--green);">
+        <h3 style="color:var(--green);"> Done Right</h3>
+        <ul>
+          <li>bcrypt hashing with salt rounds (cost factor 10)</li>
+          <li>Raw password <strong>never</strong> stored in DB</li>
+          <li>Unique constraint on username &amp; email</li>
+          <li>Role enum restricts to seller/buyer only</li>
+          <li>Rate limiting on all routes</li>
+          <li>Welcome email on registration</li>
+          <li>Environment variables for secrets</li>
+        </ul>
+      </div>
+      <div class="card" style="border-left:4px solid var(--yellow);">
+        <h3 style="color:var(--yellow);"> Needs Attention</h3>
+        <ul>
+          <li><code>bcrypt.compare</code> missing <code>await</code> — login always fails</li>
+          <li>Rate limit (3/15min) too strict for production</li>
+          <li>No input sanitization / validation library (e.g. Joi, Zod)</li>
+          <li>No error status codes (always 200 even on error)</li>
+          <li>No JWT/session tokens — login returns no auth token</li>
+          <li>Email send is fire-and-forget — no error handling</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="container">
+    walktrough from ECOM-BACKEND codebase &mdash; Registration Flow &amp; Security Documentation
+  </div>
+</footer>
+
+</body>
+</html>
