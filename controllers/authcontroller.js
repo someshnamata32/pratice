@@ -19,7 +19,7 @@ exports.register=async (req,res)=>{
   await users.create({username,password:hashedpassword,email,role})
   //generate a token and send token to client
   let payload={username:username,email:email}
-  let token=await jwt.sign(payload,process.env.SECRETKEY,{expiresIn:'1hr'})
+  let token=await jwt.sign(payload,process.env.JWT_SECRET,{expiresIn:'1hr'})
   res.json({"msg":"registration succesfull",token})
 mail(email,username);
   } catch (error) {
