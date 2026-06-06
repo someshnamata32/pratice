@@ -16,6 +16,16 @@ app.use(limiter)
 app.use('/products',productroutes)
 app.use('/auth',authroutes)
 
+// app.post('/products/bulk',async (req,res)=>{
+//   try {
+//     await products.insertMany([req.body])
+//     res.json({msg:"products saved"})
+//   } catch (error) {
+//     res.json(error.message)
+//   }
+// })
+
+
 
 app.listen(port,()=>{
   console.log(`the server is running on ${port} `)
